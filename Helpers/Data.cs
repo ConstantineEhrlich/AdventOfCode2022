@@ -7,13 +7,12 @@ public class Data: IEnumerable<string>
 {
     private const string Url = "https://adventofcode.com/";
     private static readonly string? Cookie = Environment.GetEnvironmentVariable("ADVENT_COOKIE");
-    
-    private int? _day;
-    private int? _year;
+    private int? Year { get; set; }
+    private int? Day { get; set; }
 
     public IEnumerator<string> GetEnumerator()
     {
-        Task<HttpContent> task = GetContent();
+        Task<HttpContent> task = GetContentAsync();
         task.Wait();
         StreamReader reader = new StreamReader(task.Result.ReadAsStream());
         while (!reader.EndOfStream)
@@ -21,36 +20,34 @@ public class Data: IEnumerable<string>
             yield return reader.ReadLine() ?? string.Empty;
         }
     }
-    
+
     public Data ForDay(int day)
     {
-        _day = day;
+        Day = day;
         return this;
     }
 
     public Data ForYear(int year)
     {
-        _year = year;
+        Year = year;
         return this;
     }
     
-    private async Task<HttpContent> GetContent()
+    private async Task<HttpContent> GetContentAsync()
     {
-        if (_year == null) 
+        if (Year == null) 
             throw new NullReferenceException("Must specify year!");
 
-        if (_day == null)
+        if (Day == null)
             throw new NullReferenceException("Must specify day!");
 
         using HttpClient client = new(MakeHandler());
-
-        string requestUrl = $"{Url}{_year}/day/{_day}/input";
-        HttpResponseMessage message = await client.GetAsync(requestUrl);
-        
-        // This may throw HttpRequestException
-        message.EnsureSuccessStatusCode();
-        
-        return message.Content;
+        {
+            string requestUrl = $"{Url}{Year}/day/{Day}/input";
+            HttpResponseMessage message = await client.GetAsync(requestUrl);
+            message.EnsureSuccessStatusCode();
+            return message.Content;
+        }        
     }
     
     private static HttpClientHandler MakeHandler()
