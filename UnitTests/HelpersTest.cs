@@ -9,7 +9,7 @@ public class HelpersTest
     {
         try
         {
-            foreach (string s in new Data().ForYear(2021).ForDay(1))
+            foreach (string s in new Data().ForYear(2022).ForDay(1))
             {
                 Console.WriteLine(s);
             }
