@@ -5,10 +5,11 @@ namespace Helpers;
 
 public class Data: IEnumerable<string>
 {
+    public int? Year { get; private set; }
+    public int? Day { get; private set; }
+
     private const string Url = "https://adventofcode.com/";
     private static readonly string? Cookie = Environment.GetEnvironmentVariable("ADVENT_COOKIE");
-    private int? Year { get; set; }
-    private int? Day { get; set; }
 
     public IEnumerator<string> GetEnumerator()
     {

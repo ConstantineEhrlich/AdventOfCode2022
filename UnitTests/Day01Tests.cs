@@ -10,6 +10,5 @@ public class Day01Tests
         var result = Day01.Resolve();
         Console.WriteLine($"Max weight for one elf is {result.TopOne}.");
         Console.WriteLine($"Total weight for top three elves is {result.TopThree}");
-
     }
 }
