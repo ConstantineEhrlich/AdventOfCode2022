@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Net;
+using System.Net.Http.Headers;
 
 namespace Helpers;
 
@@ -45,6 +46,8 @@ public class Data: IEnumerable<string>
         using HttpClient client = new(MakeHandler());
         {
             string requestUrl = $"{Url}{Year}/day/{Day}/input";
+            ProductInfoHeaderValue userAgent = new("(+https://github.com/ConstantineEhrlich/AdventOfCode2022)");
+            client.DefaultRequestHeaders.UserAgent.Add(userAgent);
             HttpResponseMessage message = await client.GetAsync(requestUrl);
             message.EnsureSuccessStatusCode();
             return message.Content;
