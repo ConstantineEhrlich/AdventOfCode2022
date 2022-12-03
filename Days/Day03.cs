@@ -4,30 +4,28 @@ public static class Day03
 {
     public static (int FirstAnswer, int SecondAnswer) Resolve(IEnumerable<string> data)
     {
-        List<char> commonItems = FindCommonItems(data);
-
-        int groupCounter = 0;
-        List<string> threePack = new();
-        int score = 0;
-        foreach (string input in data)
+        List<string> dataList = data.ToList();
+        
+        // Solution for the first part:
+        int commonItemsScore = CalculateScore(FindCommonItems(dataList));
+        
+        // Solution for the second part
+        int counter = 0;
+        int totalScore = 0;
+        foreach (string input in dataList)
         {
-            
-            groupCounter++;
-            threePack.Add(input);
-            
-            if (groupCounter % 3 == 0)
+            counter++;
+            if (counter % 3 == 0)
             {
-                HashSet<char> firstRucksack = new(threePack[0].ToCharArray());
-                firstRucksack.IntersectWith(new HashSet<char>(threePack[1].ToCharArray()));
-                firstRucksack.IntersectWith(new HashSet<char>(threePack[2].ToCharArray()));
-                score += CalculateScore(firstRucksack);
-                threePack.Clear();
+                HashSet<char> uniqueItems = new(dataList[counter-3].ToCharArray());
+                uniqueItems.IntersectWith(new HashSet<char>(dataList[counter-2].ToCharArray()));
+                uniqueItems.IntersectWith(new HashSet<char>(dataList[counter-1].ToCharArray()));
+                totalScore += CalculateScore(uniqueItems);
             }
-            
         }
         
         
-        return (CalculateScore(commonItems), score);
+        return (commonItemsScore, totalScore);
     }
 
     public static (HashSet<char> FirstCompartment, HashSet<char> SecondCompartment) ParseInput(string input)
