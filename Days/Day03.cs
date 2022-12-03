@@ -10,20 +10,14 @@ public static class Day03
         int commonItemsScore = CalculateScore(FindCommonItems(dataList));
         
         // Solution for the second part
-        int counter = 0;
         int totalScore = 0;
-        foreach (string input in dataList)
+        for (int i = 0; i < dataList.Count; i+=3)
         {
-            counter++;
-            if (counter % 3 == 0)
-            {
-                HashSet<char> uniqueItems = new(dataList[counter-3].ToCharArray());
-                uniqueItems.IntersectWith(new HashSet<char>(dataList[counter-2].ToCharArray()));
-                uniqueItems.IntersectWith(new HashSet<char>(dataList[counter-1].ToCharArray()));
-                totalScore += CalculateScore(uniqueItems);
-            }
-        }
-        
+            HashSet<char> uniqueItems = new(dataList[i].ToCharArray());
+            uniqueItems.IntersectWith(new HashSet<char>(dataList[i+1].ToCharArray()));
+            uniqueItems.IntersectWith(new HashSet<char>(dataList[i+2].ToCharArray()));
+            totalScore += CalculateScore(uniqueItems);
+        }        
         
         return (commonItemsScore, totalScore);
     }
