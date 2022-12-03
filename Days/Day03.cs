@@ -5,7 +5,30 @@ public static class Day03
     public static (int FirstAnswer, int SecondAnswer) Resolve(IEnumerable<string> data)
     {
         List<char> commonItems = FindCommonItems(data);
-        return (CalculateScore(commonItems), 0);
+
+        int groupCounter = 0;
+        List<string> threePack = new();
+        int score = 0;
+        foreach (string input in data)
+        {
+            
+            groupCounter++;
+            threePack.Add(input);
+            //threePack.UnionWith(new HashSet<char>(input.ToCharArray()));
+            
+            if (groupCounter % 3 == 0)
+            {
+                HashSet<char> firstRucksack = new(threePack[0].ToCharArray());
+                firstRucksack.IntersectWith(new HashSet<char>(threePack[1].ToCharArray()));
+                firstRucksack.IntersectWith(new HashSet<char>(threePack[2].ToCharArray()));
+                score += CalculateScore(firstRucksack);
+                threePack.Clear();
+            }
+            
+        }
+        
+        
+        return (CalculateScore(commonItems), score);
     }
 
     public static (HashSet<char> FirstCompartment, HashSet<char> SecondCompartment) ParseInput(string input)
@@ -37,24 +60,16 @@ public static class Day03
         int score = 0;
         foreach (char item in itemsSet)
         {
-            score += DecodeCharacter(item);
+            if (!char.IsLetter(item))
+                throw new ArgumentException($"Character {item} is not a letter!");
+            score += char.IsUpper(item) switch
+            {
+                true => item - 38,
+                false => item - 96
+            };
         }
 
         return score;
     }
-    
-    private static int DecodeCharacter(char c)
-    {
-        if (!char.IsLetter(c))
-            throw new ArgumentException($"Character {c} is not a letter!");
-        
-        switch (char.IsUpper(c))
-        {
-            case true:
-                return (int)c - 38;
-            case false:
-                return (int)c - 96;
-        }
-    }
-    
 }
+    

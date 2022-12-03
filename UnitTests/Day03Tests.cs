@@ -11,6 +11,7 @@ public class Day03Tests
     {
         var result = Resolve(new Data().ForDay(3).ForYear(2022));
         Console.WriteLine($"Sum of priorities of common items in all rucksacks is: {result.FirstAnswer}");
+        Console.WriteLine($"Sum of badges is: {result.SecondAnswer}");
     }
     
     private IEnumerable<string> SampleData()
@@ -28,6 +29,7 @@ public class Day03Tests
     {
         var result = Resolve(SampleData());
         Assert.AreEqual(157, result.FirstAnswer);
+        Assert.AreEqual(70, result.SecondAnswer);
     }
 
     [TestMethod]
@@ -42,7 +44,6 @@ public class Day03Tests
     {
         Assert.AreEqual(157, CalculateScore("pLPvts"));
     }
-    
 }
 
 
