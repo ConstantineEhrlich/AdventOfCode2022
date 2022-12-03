@@ -14,7 +14,6 @@ public static class Day03
             
             groupCounter++;
             threePack.Add(input);
-            //threePack.UnionWith(new HashSet<char>(input.ToCharArray()));
             
             if (groupCounter % 3 == 0)
             {
