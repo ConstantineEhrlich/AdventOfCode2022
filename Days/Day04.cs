@@ -57,13 +57,12 @@ public static class Day04
     {
         if (!(input.Contains('-') && input.Contains(',')))
             throw new ArgumentException($"Dash and comma not found in {input}");
-        string[] splitInput = input.Split(',');
-        string[] first = splitInput[0].Split('-');
-        string[] second = splitInput[1].Split('-');
-        int.TryParse(first[0], out int firstFrom);
-        int.TryParse(first[1], out int firstTo);
-        int.TryParse(second[0], out int secondFrom);
-        int.TryParse(second[1], out int secondTo);
+        char[] separators = new char[2] { ',', '-' };
+        string[] splitInput = input.Split(separators);
+        int.TryParse(splitInput[0], out int firstFrom);
+        int.TryParse(splitInput[1], out int firstTo);
+        int.TryParse(splitInput[2], out int secondFrom);
+        int.TryParse(splitInput[3], out int secondTo);
         return (firstFrom, firstTo, secondFrom, secondTo);
     }
 }
