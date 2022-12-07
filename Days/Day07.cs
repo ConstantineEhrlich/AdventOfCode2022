@@ -132,16 +132,16 @@ public class FileNode
     public List<FileNode> Traverse()
     {
         List<FileNode> list = new();
-        ToList(this, list);
+        Traverse(this, list);
         return list;
     }
 
-    private void ToList(FileNode node, List<FileNode> list)
+    private void Traverse(FileNode node, List<FileNode> list)
     {
         list.Add(node);
         foreach (var nodeChild in node.Children)
         {
-            ToList(nodeChild, list);
+            Traverse(nodeChild, list);
         }
     }
  
