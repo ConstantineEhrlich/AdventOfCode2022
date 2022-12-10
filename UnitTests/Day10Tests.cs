@@ -10,16 +10,21 @@ public class Day10Tests
     [TestMethod]
     public void CalculateSolution()
     {
-        var result = Resolve(new Data().ForDay(10).ForYear(2022));
-        Console.WriteLine($"First Answer: {result.FirstAnswer}");
-        //Console.WriteLine($"Second Answer: {result.SecondAnswer}");
+        Resolve(new Data().ForDay(10).ForYear(2022));
+    }
+
+    [TestMethod]
+    public void TestDisplay()
+    {
+        Display d = new();
+        d.Print();
     }
     
     [TestMethod]
     public void TestLargerExample()
     {
         var result = Resolve(SampleData());
-        Assert.AreEqual(13140, result.FirstAnswer);
+        Assert.AreEqual(13140, result);
     }
 
     private IEnumerable<string> SampleData()
