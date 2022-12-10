@@ -53,9 +53,7 @@ public static class Day10
             }
 
             if (_scanner.col >= position - 1 & _scanner.col <= position + 1)
-            {
-                Matrix[_scanner.row][_scanner.col] = '#';
-            }
+                Matrix[_scanner.row][_scanner.col] = '#'; 
         }
 
         public void Print()
