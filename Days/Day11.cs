@@ -2,20 +2,27 @@ namespace Days;
 
 public static class Day11
 {
-    public static (int FirstAnswer, int SecondAnswer) Resolve(IEnumerable<string> data)
+    public static (ulong FirstAnswer, ulong SecondAnswer) Resolve(IEnumerable<string> data)
     {
-        var monkeys = ParseData(data);
+        var monkeys1 = ParseData(data);
         for (int round = 0; round < 20; round++)
         {
-            PlayRound(monkeys);
+            PlayRound1(monkeys1);
         }
-        var mostActive = monkeys.Select(x => x.InspectionCount).OrderByDescending(x => x).Take(2).ToArray();
-        int result = mostActive[0] * mostActive[1];
-
-        return (result, 0);
+        var mostActive1 = monkeys1.Select(x => x.InspectionCount).OrderByDescending(x => x).Take(2).ToArray();
+        ulong result1 = mostActive1[0] * mostActive1[1];
+        
+        var monkeys2 = ParseData(data);
+        for (int round = 0; round < 10000; round++)
+        {
+            PlayRound2(monkeys2);
+        }
+        var mostActive2 = monkeys2.Select(x => x.InspectionCount).OrderByDescending(x => x).Take(2).ToArray();
+        ulong result2 = mostActive2[0] * mostActive2[1];
+        
+        return (result1, result2);
     }
     
-
     public static List<Monkey> ParseData(IEnumerable<string> data)
     {
         var dataList = data.ToList();
@@ -27,18 +34,18 @@ public static class Day11
         }
 
         return monkeys;
-
     }
 
-    public static void PlayRound(List<Monkey> monkeys)
+    public static void PlayRound1(List<Monkey> monkeys)
     {
         foreach (Monkey monkey in monkeys)
         {
-            monkey.InspectionCount += monkey.ItemsList.Count;
-            while (monkey.ItemsList.TryDequeue(out int item))
+            monkey.InspectionCount += (uint)monkey.ItemsList.Count;
+            while (monkey.ItemsList.TryDequeue(out ulong item))
             {
                 item = monkey.ApplyOperation(item);
                 item = item / 3;
+                item = (ulong)Math.Floor((double)item);
                 int targetMonkey = item % monkey.DivisibleBy == 0
                     ? monkey.ThrowDirection.True
                     : monkey.ThrowDirection.False;
@@ -47,47 +54,66 @@ public static class Day11
         }
     }
 
-    
-
+    public static void PlayRound2(List<Monkey> monkeys)
+    {
+        // Thanks to Timmoth for commonDeviser
+        // https://github.com/Timmoth/AdventOfCode2022/blob/main/Solutions/Day11.cs
+        ulong commonDeviser = 1;
+        foreach (Monkey monkey in monkeys)
+        {
+            commonDeviser *= monkey.DivisibleBy;
+        }
+        
+        foreach (Monkey monkey in monkeys)
+        {
+            monkey.InspectionCount += (uint)monkey.ItemsList.Count;
+            while (monkey.ItemsList.TryDequeue(out ulong item))
+            {
+                item = monkey.ApplyOperation(item);
+                var newItem = item % commonDeviser;
+                int targetMonkey = newItem % monkey.DivisibleBy == 0
+                    ? monkey.ThrowDirection.True
+                    : monkey.ThrowDirection.False;
+                monkeys[targetMonkey].ItemsList.Enqueue(newItem);
+            }
+        }
+    }
 }
-
 
 public class Monkey
 {
-    public int InspectionCount { get; set; } = 0;
-    public Queue<int> ItemsList { get; }
+    public ulong InspectionCount { get; set; } = 0;
+    public Queue<ulong> ItemsList { get; }
     public string Operation { get; }
     public (int True, int False) ThrowDirection { get; }
-    public int DivisibleBy { get; }
+    public uint DivisibleBy { get; }
 
     public Monkey(List<string> dataList)
     {
-        List<int> startingItems = dataList[1][18..]
+        List<ulong> startingItems = dataList[1][18..]
             .Split(", ")
-            .Select(x => int.Parse(x))
+            .Select(x => ulong.Parse(x))
             .ToList();
         string operation = dataList[2][19..];
-        int divisibleBy = int.Parse(dataList[3][21..]);
+        uint divisibleBy = uint.Parse(dataList[3][21..]);
         (int True, int False) throwDirection;
         throwDirection.True = int.Parse(dataList[4][29..]);
         throwDirection.False = int.Parse(dataList[5][30..]);
-
-        ItemsList = new Queue<int>(startingItems);
+        
+        ItemsList = new Queue<ulong>(startingItems);
         Operation = operation;
         DivisibleBy = divisibleBy;
         ThrowDirection = throwDirection;
     }
 
-    public int ApplyOperation(int item)
+    public ulong ApplyOperation(ulong item)
     {
         string[] operation = Operation.Split(' ');
-        int left;
-        int right;
-        if (!int.TryParse(operation[0], out left))
+        if (!ulong.TryParse(operation[0], out ulong left))
         {
             left = item;
         }
-        if (!int.TryParse(operation[2], out right))
+        if (!ulong.TryParse(operation[2], out ulong right))
         {
             right = item;
         }
@@ -100,6 +126,4 @@ public class Monkey
             _ => throw new FormatException($"{operation[1]} is incorrect operation!")
         };
     }
-
 }
-

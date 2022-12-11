@@ -11,13 +11,15 @@ namespace UnitTests
         {
             var result = Resolve(new Data().ForDay(11).ForYear(2022));
             Console.WriteLine($"Level of monkey business after 20 rounds is: {result.FirstAnswer}");
+            Console.WriteLine($"Level of monkey business after 10000 rounds is: {result.SecondAnswer}");
         }
         
         [TestMethod]
         public void TestSolution()
         {
             var result = Resolve(SampleData());
-            Assert.AreEqual(10605, result.FirstAnswer);
+            Assert.AreEqual((ulong)10605, result.FirstAnswer);
+            Assert.AreEqual(2713310158, result.SecondAnswer);
         }
 
         
