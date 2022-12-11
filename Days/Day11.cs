@@ -5,7 +5,6 @@ public static class Day11
     public static (int FirstAnswer, int SecondAnswer) Resolve(IEnumerable<string> data)
     {
         var monkeys = ParseData(data);
-
         for (int round = 0; round < 20; round++)
         {
             PlayRound(monkeys);
@@ -35,21 +34,14 @@ public static class Day11
     {
         foreach (Monkey monkey in monkeys)
         {
-            while (monkey.ItemsList.Count > 0)
+            monkey.InspectionCount += monkey.ItemsList.Count;
+            while (monkey.ItemsList.TryDequeue(out int item))
             {
-                int item = monkey.ItemsList.Dequeue();
-                monkey.InspectionCount++;
                 item = monkey.ApplyOperation(item);
                 item = item / 3;
-                int targetMonkey;
-                if (item % monkey.DivisibleBy == 0)
-                {
-                    targetMonkey = monkey.ThrowDirection.True;
-                }
-                else
-                {
-                    targetMonkey = monkey.ThrowDirection.False;
-                }
+                int targetMonkey = item % monkey.DivisibleBy == 0
+                    ? monkey.ThrowDirection.True
+                    : monkey.ThrowDirection.False;
                 monkeys[targetMonkey].ItemsList.Enqueue(item);
             }
         }
@@ -63,10 +55,10 @@ public static class Day11
 public class Monkey
 {
     public int InspectionCount { get; set; } = 0;
-    public Queue<int> ItemsList { get; init; }
-    public string Operation { get; init; }
-    public (int True, int False) ThrowDirection { get; init; }
-    public int DivisibleBy { get; init; }
+    public Queue<int> ItemsList { get; }
+    public string Operation { get; }
+    public (int True, int False) ThrowDirection { get; }
+    public int DivisibleBy { get; }
 
     public Monkey(List<string> dataList)
     {
