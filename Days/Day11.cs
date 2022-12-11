@@ -78,7 +78,7 @@ public class Monkey
         int divisibleBy = int.Parse(dataList[3][21..]);
         (int True, int False) throwDirection;
         throwDirection.True = int.Parse(dataList[4][29..]);
-        throwDirection.False = int.Parse(dataList[5][29..]);
+        throwDirection.False = int.Parse(dataList[5][30..]);
 
         ItemsList = new Queue<int>(startingItems);
         Operation = operation;
